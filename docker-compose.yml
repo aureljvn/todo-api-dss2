@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  db:
+  DSS2:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: postgrespassword
       POSTGRES_DB: tododb
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -53,7 +53,7 @@ services:
       RabbitMq__Password: guest
       Redis__ConnectionString: "redis:6379"
     depends_on:
-      db:
+      DSS2:
         condition: service_healthy
       redis:
         condition: service_healthy
