@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  DSS2:
+  dss2:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
@@ -17,6 +17,8 @@ services:
 
   redis:
     image: redis:7-alpine
+    ports:
+      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -25,6 +27,9 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -43,7 +48,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:3087
-      ConnectionStrings__Default: "Host=DSS2;Port=5432;Database=tododb;Username=postgres;Password=postgrespassword"
+      ConnectionStrings__Default: "Host=dss2;Port=5432;Database=tododb;Username=postgres;Password=postgrespassword"
       Jwt__Key: "your-super-secret-jwt-key-that-is-at-least-32-characters-long"
       Jwt__Issuer: "TodoApi"
       Jwt__Audience: "TodoApiUsers"
@@ -53,7 +58,7 @@ services:
       RabbitMq__Password: guest
       Redis__ConnectionString: "redis:6379"
     depends_on:
-      DSS2:
+      dss2:
         condition: service_healthy
       redis:
         condition: service_healthy
